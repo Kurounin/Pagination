@@ -3,7 +3,7 @@ Kurounin:Pagination
 
 This package allows you to paginate the subscriptions over meteor's collections. It can be used in a Blaze template or in ReactJS.
 
-#Usage
+# Usage
 
 In your collections file (e.g. lib/collections.js):
 ```js
@@ -43,7 +43,7 @@ Template.myList.created = function () {
     });
 }
 
-Template.body.helpers({
+Template.myList.helpers({
     templatePagination: function () {
         return Template.instance().pagination;
     },
