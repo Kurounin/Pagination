@@ -35,7 +35,7 @@ var Pagination = (function () {
         }
 
         if (!this.fields()) {
-            this.filters(settings.fields);
+            this.fields(settings.fields);
         }
 
         if (!this.sort()) {

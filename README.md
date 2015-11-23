@@ -3,6 +3,17 @@ Kurounin:Pagination
 
 This package allows you to paginate the subscriptions over meteor's collections. It can be used in a Blaze template or in ReactJS.
 
+
+Features
+--------
+
++ **Incremental subscriptions**. Downloads only what is needed, not the entire collection at once. Suitable for large datasets.
++ **Local cache**. Uses [ccorcos:subs-cache](https://atmospherejs.com/ccorcos/subs-cache) to cache a maximum of 5 subscriptions, for 5 minutes.
++ **Easy integration**. The package works out of the box. Page changes are triggered by a single reactive dictionary variable.
++ **Multiple collections per page**. Each Pagination instance runs independently. You can even create multiple paginations for one collection on a single page.
++ **Bootstrap 3 compatible navigation template**. Blaze template for a bootstrap 3 styled paginator.
+
+
 # Usage
 
 In your collections file (e.g. lib/collections.js):
