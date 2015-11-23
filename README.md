@@ -103,7 +103,7 @@ MyListPage = React.createClass({
 ```
 
 
-# Client Pagination available settings on init:
+# Client Pagination available settings on init
 
 * `page`: set the initial page, for example the page parameter from url (defaults to **1**)
 * `perPage`: set the number of documents to be fetched per page (defaults to **10**)
@@ -112,7 +112,7 @@ MyListPage = React.createClass({
 * `sort`: set the sorting for retrieved documents (defaults to **{_id: -1}**)
 
 
-# Client Pagination available methods:
+# Client Pagination available methods
 
 * `currentPage([int])`: get/set the current page
 * `perPage([int])`: get/set the number of documents per page
@@ -125,9 +125,9 @@ MyListPage = React.createClass({
 * `getPage()`: returns the documents for the current page
 
 
-# Paginator template:
+# Paginator template
 
-A template is also provided to navigate trough available pages:
+A template is also provided to navigate through available pages:
 
 ```html
 {{> defaultBootstrapPagination pagination=templatePagination limit=10 containerClass="text-center"}}
