@@ -1,0 +1,32 @@
+<template name="defaultBootstrapPagination">
+    <div class="pagination-container {{containerClass}}" >
+        {{#if hasPages}}
+            <ul class="pagination">
+
+                <li class="{{#if isInFirstPage}}disabled{{/if}}">
+                    <a href="#" class="previous-page" title="Previous page"> &lt; </a>
+                </li>
+
+                {{#if arePreviousPagesHidden}}
+                    {{#with 1}}
+                        <li><a href="#" class="page-link" title="Go to page {{.}}"> {{.}} </a></li>
+                    {{/with}}
+                    <li><a href="#" class="show-prev" title="Show previous pages"> ... </a></li>
+                {{/if}}
+                {{#each pagesToDisplay}}
+                    <li class="{{#if isActive}}active{{/if}}"><a href="#" class="page-link" title="page {{.}}">{{.}}</a></li>
+                {{/each}}
+                {{#if areNextPagesHidden}}
+                    <li><a href="#" class="show-next" title="Show next pages"> ... </a></li>
+                    {{#with lastPage}}
+                        <li><a href="#" class="page-link" title="Go to page {{.}}"> {{.}} </a></li>
+                    {{/with}}
+                {{/if}}
+
+                <li class="{{#if isInLastPage}}disabled{{/if}}">
+                    <a href="#" class="next-page" title="Next page"> &gt; </a>
+                </li>
+            </ul>
+        {{/if}}
+    </div>
+</template>
