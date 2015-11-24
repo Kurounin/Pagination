@@ -1,4 +1,4 @@
-Template.defaultBootstrapPagination.created = function(){
+Template.defaultBootstrapPaginator.created = function(){
     var self = this;
 
     this.displayedPages = new ReactiveVar([]);
@@ -35,7 +35,7 @@ Template.defaultBootstrapPagination.created = function(){
     })
 };
 
-Template.defaultBootstrapPagination.helpers({
+Template.defaultBootstrapPaginator.helpers({
     hasPages: function () {
         return this.pagination && this.pagination.totalPages() > 1 && this.limit;
     },
@@ -65,7 +65,7 @@ Template.defaultBootstrapPagination.helpers({
     }
 });
 
-Template.defaultBootstrapPagination.events({
+Template.defaultBootstrapPaginator.events({
     'click .page-link': function(e, templateInstance){
         templateInstance.data.pagination.currentPage(this.valueOf());
     },

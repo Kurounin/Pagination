@@ -8,10 +8,12 @@ Features
 --------
 
 + **Incremental subscriptions**. Downloads only what is needed, not the entire collection at once. Suitable for large datasets.
++ **Instant changes propagation**. Any document changes are instantly propagated, thanks to light-weight modifications of subscription mechanism.
 + **Local cache**. Uses [ccorcos:subs-cache](https://atmospherejs.com/ccorcos/subs-cache) to cache a maximum of 5 subscriptions, for 5 minutes.
 + **Easy integration**. The package works out of the box. Page changes are triggered by a single reactive dictionary variable.
 + **Multiple collections per page**. Each Pagination instance runs independently. You can even create multiple paginations for one collection on a single page.
 + **Bootstrap 3 compatible navigation template**. Blaze template for a bootstrap 3 styled paginator.
++ **Bootstrap 3 compatible navigation react class**. ReactJS class for a bootstrap 3 styled paginator.
 
 
 # Usage
@@ -39,7 +41,7 @@ In your template file (e.g. client/views/mylist.html):
               <li>Document #{{_id}}</li>
           {{/each}}
         </ul>
-        {{> defaultBootstrapPagination pagination=templatePagination limit=10 containerClass="text-center"}}
+        {{> defaultBootstrapPaginator pagination=templatePagination limit=10 containerClass="text-center"}}
 	</div>
 </template>
 ```
@@ -66,7 +68,6 @@ Template.myList.helpers({
 
 For ReactJS template
 --------------------------------------------------
-In this example for paginator I used a [React-Bootstrap](http://react-bootstrap.github.io/) component.
 In your view file (e.g. client/views/mylist.jsx):
 ```html
 MyListPage = React.createClass({
@@ -87,26 +88,17 @@ MyListPage = React.createClass({
         );
     },
 
-    handleChangePage(event, selectedPage) {
-        this.pagination.currentPage(selectedPage.eventKey);
-    },
-
     render: function() {
         return (
           <div>
               <ul>
                   {this.data.documents.map(this.renderDocument)}
               </ul>
-              <nav>
-                <ReactBootstrap.Pagination
-                  prev={true}
-                  next={true}
-                  ellipsis={false}
-                  items={this.pagination.totalPages()}
-                  maxButtons={10}
-                  activePage={this.pagination.currentPage()}
-                  onSelect={this.handleChangePage} />
-  				</nav>
+              <DefaultBootstrapPaginator
+                  pagination={this.pagination}
+                  limit={10}
+                  containerClass="text-center"
+                  />
           </div>
         );
     }
@@ -136,16 +128,29 @@ MyListPage = React.createClass({
 * `getPage()`: returns the documents for the current page
 
 
-# Paginator template
+# Blaze Paginator template
 
-A template is also provided to navigate through available pages:
+A Blaze template is provided to allow navigation through available pages:
 
 ```html
-{{> defaultBootstrapPagination pagination=templatePagination limit=10 containerClass="text-center"}}
+{{> defaultBootstrapPaginator pagination=templatePagination limit=10 containerClass="text-center"}}
 ```
 Available template parameters are:
 * `pagination`: pagination instance
 * `limit`: the maximum number of page links to display
+* `containerClass`: optional container class for the paginator
+
+
+# ReactJS Paginator class
+
+A ReactJS class is provided to allow navigation through available pages:
+
+```js
+<DefaultBootstrapPaginator pagination={this.pagination} limit={10} containerClass="text-center" />
+```
+Available class properties are:
+* `pagination`: pagination instance
+* `limit`: maximum number of page links to display (defaults to **10**)
 * `containerClass`: optional container class for the paginator
 
 
