@@ -45,6 +45,8 @@ In your template file (e.g. client/views/mylist.html):
 	</div>
 </template>
 ```
+**[kurounin:paginationblaze](https://atmospherejs.com/kurounin/pagination-blaze) package is needed for paginator**
+
 
 In your template javascript file (e.g. client/scripts/mylist.js):
 ```js
@@ -104,6 +106,7 @@ MyListPage = React.createClass({
     }
 });
 ```
+**[kurounin:paginationreactjs](https://atmospherejs.com/kurounin/pagination-reactjs) package is needed for paginator**
 
 
 # Client Pagination available settings on init
