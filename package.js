@@ -1,6 +1,13 @@
 var fs = Npm.require('fs'),
     path = Npm.require('path'),
-    meteorPackages = fs.readFileSync(path.resolve('.meteor/packages'), 'utf8');
+    meteorPackages = '';
+
+try {
+	meteorPackages = fs.readFileSync(path.resolve('.meteor/packages'), 'utf8')
+} catch (err) {
+	// ignore missing file error on package publish
+	if (err.code !== 'ENOENT') throw err;
+}
 
 function isBlazeUsed() {
     return !!meteorPackages.match(/blaze-html-templates\n/);
