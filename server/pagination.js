@@ -9,6 +9,9 @@ var Pagination = (function () {
 
     Pagination.prototype.publish = function(collection) {
         Meteor.publish(collection._name, function(query, options) {
+            check(query, Match.Optional(Object));
+            check(options, Match.Optional(Object));
+
             var self = this;
             query = query || {};
             options = options || {};
