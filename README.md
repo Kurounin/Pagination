@@ -9,7 +9,6 @@ Features
 
 + **Incremental subscriptions**. Downloads only what is needed, not the entire collection at once. Suitable for large datasets.
 + **Instant changes propagation**. Any document changes are instantly propagated, thanks to light-weight modifications of subscription mechanism.
-+ **Local cache**. Uses [ccorcos:subs-cache](https://atmospherejs.com/ccorcos/subs-cache) to cache a maximum of 5 subscriptions, for 5 minutes.
 + **Easy integration**. The package works out of the box. Page changes are triggered by a single reactive dictionary variable.
 + **Multiple collections per page**. Each Pagination instance runs independently. You can even create multiple paginations for one collection on a single page.
 + **Bootstrap 3 compatible navigation template**. Blaze template for a bootstrap 3 styled paginator.
@@ -106,7 +105,8 @@ MyListPage = React.createClass({
     }
 });
 ```
-**[kurounin:pagination-reactjs](https://atmospherejs.com/kurounin/pagination-reactjs) package is needed for paginator**
+**For Meteor 1.2 [kurounin:pagination-reactjs](https://atmospherejs.com/kurounin/pagination-reactjs) package is needed for paginator**
+**For Meteor 1.3 [react-bootstrap-pagination](https://www.npmjs.com/package/react-bootstrap-pagination) npm package is needed for paginator**
 
 
 # Client Pagination available settings on init

@@ -17,11 +17,6 @@ var Pagination = (function () {
             settings || {}
         );
 
-        this.subsCache = new SubsCache({
-            expireAfter: 5, // minutes
-            cacheLimit: 5 // number of subscriptions
-        });
-
         if (!this.currentPage()) {
             this.currentPage(settings.page);
         }
@@ -126,7 +121,7 @@ var Pagination = (function () {
                 skip: (this.currentPage() - 1) * this.perPage(),
                 limit: this.perPage()
             },
-            handle = this.subsCache.subscribe(
+            handle = Meteor.subscribe(
                 this.collection._name,
                 this.filters(),
                 options
@@ -135,10 +130,10 @@ var Pagination = (function () {
 
         this.ready(handle.ready());
         if (handle.ready()) {
-            this.totalItems(Counts.get('sub_count_' + handle.sub.subscriptionId));
+            this.totalItems(Counts.get('sub_count_' + handle.subscriptionId));
         }
 
-        query['sub_' + handle.sub.subscriptionId] = 1;
+        query['sub_' + handle.subscriptionId] = 1;
         return this.collection.find(query, {fields: this.fields(), sort: this.sort()}).fetch();
     };
 
