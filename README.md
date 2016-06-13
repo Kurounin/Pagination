@@ -106,6 +106,7 @@ MyListPage = React.createClass({
 });
 ```
 **For Meteor 1.2 [kurounin:pagination-reactjs](https://atmospherejs.com/kurounin/pagination-reactjs) package is needed for paginator**
+
 **For Meteor 1.3 [react-bootstrap-pagination](https://www.npmjs.com/package/react-bootstrap-pagination) npm package is needed for paginator**
 
 
