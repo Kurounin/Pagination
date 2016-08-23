@@ -9,6 +9,7 @@ Package.onUse(function (api) {
     api.versionsFrom("METEOR@1.2.1");
     api.use([
         "meteor-base",
+        "check",
         "underscore",
         "mongo",
         "tmeasday:publish-counts@0.7.3"
