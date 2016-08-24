@@ -40,7 +40,7 @@ In your template file (e.g. client/views/mylist.html):
               <li>Document #{{_id}}</li>
           {{/each}}
         </ul>
-        {{> defaultBootstrapPaginator pagination=templatePagination limit=10 containerClass="text-center"}}
+        {{> defaultBootstrapPaginator pagination=templatePagination limit=10 containerClass="text-center" onClick=clickEvent}}
 	</div>
 </template>
 ```
@@ -63,7 +63,14 @@ Template.myList.helpers({
     },
 	documents: function () {
 		return Template.instance().pagination.getPage();
-	}
+	},
+	// optional helper used to return a callback that should be executed before changing the page
+    clickEvent: function() {
+        return function(e, templateInstance, clickedPage) {
+            e.preventDefault();
+            console.log('Changing page from ', templateInstance.data.pagination.currentPage(), ' to ', clickedPage);
+        };
+    }
 });
 ```
 
@@ -137,12 +144,13 @@ MyListPage = React.createClass({
 A Blaze template is provided to allow navigation through available pages:
 
 ```html
-{{> defaultBootstrapPaginator pagination=templatePagination limit=10 containerClass="text-center"}}
+{{> defaultBootstrapPaginator pagination=templatePagination limit=10 containerClass="text-center" onClick=clickEvent}}
 ```
 Available template parameters are:
 * `pagination`: pagination instance
 * `limit`: the maximum number of page links to display
 * `containerClass`: optional container class for the paginator
+* `onClick`: optional callback to be called when page link is clicked (default callback runs `e.preventDefault()`)
 
 
 # ReactJS Paginator class
