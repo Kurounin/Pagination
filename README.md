@@ -32,7 +32,7 @@ new Meteor.Pagination(MyCollection);
 Optionally you can provide a set of filters on the server side or even dynamic filters, which can not be overridden (e.g. server/publications.js):
 ```js
 new Meteor.Pagination(MyCollection, {
-    filters: {is_enabled: true},
+    filters: {is_published: true},
     dynamic_filters: function () {
         return {user_id: this.userId};
     }
