@@ -29,6 +29,17 @@ new Meteor.Pagination(MyCollection);
 
 ```
 
+Optionally you can provide a set of filters on the server side or even dynamic filters, which can not be overriden (e.g. server/publications.js):
+```js
+new Meteor.Pagination(MyCollection, {
+    filters: {is_enabled: true},
+    dynamic_filters: function () {
+        return {user_id: this.userId};
+    }
+});
+
+```
+
 For Blaze template
 --------------------------------------------------
 In your template file (e.g. client/views/mylist.html):
