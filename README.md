@@ -179,5 +179,5 @@ Available class properties are:
 
 ### Packages used as inspiration:
 
- * [alethes:pages](https://atmospherejs.com/alethes/pages) for pagination instantiation 
+ * [alethes:pages](https://atmospherejs.com/alethes/pages) for pagination instantiation
  * [aida:pagination](https://atmospherejs.com/aida/pagination) for bootstrap paginator template
