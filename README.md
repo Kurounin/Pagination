@@ -29,7 +29,8 @@ new Meteor.Pagination(MyCollection);
 
 ```
 
-Optionally you can provide a set of filters on the server side or even dynamic filters, which can not be overridden (e.g. server/publications.js):
+Optionally you can provide a set of filters on the server side or even dynamic filters, which can not be overridden.
+There's also the option of providing a transformation filter function to validate the client filters (e.g. server/publications.js):
 ```js
 new Meteor.Pagination(MyCollection, {
     filters: {is_published: true},
@@ -38,6 +39,8 @@ new Meteor.Pagination(MyCollection, {
     },
     transform_filters: function (filters) {
         // called after filters & dynamic_filters
+		allowedKeys = ['_id', 'title'];
+
         return _.extend(
             _.pick(filters, allowedKeys),
             { user_id: this.userId }
