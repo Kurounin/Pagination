@@ -35,6 +35,13 @@ new Meteor.Pagination(MyCollection, {
     filters: {is_published: true},
     dynamic_filters: function () {
         return {user_id: this.userId};
+    },
+    transform_filters: function (filters) {
+        // called after filters & dynamic_filters
+        return _.extend(
+            _.pick(filters, allowedKeys),
+            { user_id: this.userId }
+        );
     }
 });
 

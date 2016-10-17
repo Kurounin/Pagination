@@ -54,6 +54,10 @@ var Pagination = (function () {
                 throw new Meteor.Error(4002, "Invalid dynamic filters return type. Server side dynamic filters needs to be a function that returns an object!");
             }
 
+            if (typeof settings.transform_filters === "function") {
+                filters = settings.transform_filters.call(self, filters);
+            }
+
             if (filters.length > 0) {
                 if (filters.length > 1) {
                     findQuery['$and'] = filters;
