@@ -82,8 +82,15 @@ const PaginationFactory = ((() => {
           { noReady: true }
         );
 
-        // console.log('Pagination', collection._name, 'find',
-        // JSON.stringify(findQuery), JSON.stringify(options));
+        if (options.debug) {
+          console.log(
+            'Pagination',
+            collection._name,
+            'find',
+            JSON.stringify(findQuery),
+            JSON.stringify(options)
+          );
+        }
 
         const handle = collection.find(findQuery, options).observeChanges({
           added(id, fields) {

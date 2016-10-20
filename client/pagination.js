@@ -111,6 +111,13 @@ const PaginationFactory = ((() => {
       return this.settings.get('ready');
     }
 
+    debug(debug) {
+      if (arguments.length === 1) {
+        this.settings.set('debug', debug);
+      }
+      return this.settings.get('debug');
+    }
+
     getPage() {
       const options = {
         fields: this.fields(),
@@ -118,6 +125,17 @@ const PaginationFactory = ((() => {
         skip: (this.currentPage() - 1) * this.perPage(),
         limit: this.perPage(),
       };
+
+      if (this.debug()) {
+        console.log(
+          'Pagination',
+          this.collection._name,
+          'subscribe',
+          JSON.stringify(this.filters()),
+          JSON.stringify(options)
+        );
+        options.debug = true;
+      }
 
       const handle = Meteor.subscribe(
         this.collection._name,
@@ -133,7 +151,21 @@ const PaginationFactory = ((() => {
       }
 
       query[`sub_${handle.subscriptionId}`] = 1;
-      return this.collection.find(query, { fields: this.fields(), sort: this.sort() }).fetch();
+
+      const optionsFind = { fields: this.fields(), sort: this.sort() };
+
+      if (this.debug()) {
+        console.log(
+          'Pagination',
+          this.collection._name,
+          'find',
+          JSON.stringify(query),
+          JSON.stringify(optionsFind)
+        );
+        optionsFind.debug = true;
+      }
+
+      return this.collection.find(query, options).fetch();
     }
   }
 
