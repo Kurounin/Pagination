@@ -1,0 +1,38 @@
+{
+  "parser": "babel-eslint",
+  "env": {
+    "browser": true,
+    "node": true
+  },
+  "settings": {
+    "ecmascript": 6,
+    "import/ignore": ["meteor"],
+    "import/core-modules": ["meteor"]
+  },
+  "plugins": [
+    "import",
+    "meteor"
+  ],
+  "extends": [
+    "airbnb/base",
+    "plugin:meteor/recommended"
+  ],
+  "globals": {
+    "$": false,
+    "expect": false,
+    "Meteor": false
+  },
+  "rules": {
+    "strict": 0,
+    "import/no-unresolved": [2, { commonjs: true, amd: true, ignore: ["^meteor/"] }],
+    "import/no-extraneous-dependencies": 0,
+    "import/named": 2,
+    "import/namespace": 2,
+    "import/export": 2,
+    "new-cap": 0,
+    "camelcase": 0,
+    "no-console": 0,
+    "no-underscore-dangle": 0,
+    "no-return-assign": 0
+  }
+}
