@@ -19,6 +19,7 @@ class PaginationFactory {
         filters: {},
         fields: {},
         sort: { _id: 1 },
+        debug: false
       },
       settingsIn || {}
     );
@@ -41,6 +42,10 @@ class PaginationFactory {
 
     if (!this.sort()) {
       this.sort(settings.sort);
+    }
+
+    if (!this.debug()) {
+      this.debug(settings.debug);
     }
 
     if (!this.ready()) {

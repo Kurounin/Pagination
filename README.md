@@ -138,6 +138,10 @@ MyListPage = React.createClass({
 **For Meteor 1.3 [react-bootstrap-pagination](https://www.npmjs.com/package/react-bootstrap-pagination) npm package is needed for paginator**
 
 
+# Demo project
+For an example on how this can package can be implemented check [the pagination example project](https://github.com/Kurounin/PaginationExample)
+
+
 # Client Pagination available settings on init
 
 * `page`: set the initial page, for example the page parameter from url (defaults to **1**)
@@ -145,6 +149,7 @@ MyListPage = React.createClass({
 * `filters`: filters to be applied to the subscription (defaults to **{}**, meaning no filters)
 * `fields`: fields to be returned (defaults to **{}**, meaning all fields)
 * `sort`: set the sorting for retrieved documents (defaults to **{_id: -1}**)
+* `debug`: console logs the query and options used when performing the find (defaults to **false**)
 
 
 # Client Pagination available methods
@@ -154,6 +159,7 @@ MyListPage = React.createClass({
 * `filters([Object])`: get/set the current filters
 * `fields([Object])`: get/set the retrieved fields
 * `sort([Object])`: get/set the sorting order
+* `debug([boolean])`: get/set the debug
 * `totalItems()`: get the total number of documents
 * `totalPages()`: get the total number of pages
 * `ready()`: checks if the subscription for the current page is ready
