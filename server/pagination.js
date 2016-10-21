@@ -1,124 +1,120 @@
-import _ from 'underscore';
+import { _ } from 'meteor/underscore';
 import { Meteor } from 'meteor/meteor';
 import { check, Match } from 'meteor/check';
 import { Counts } from 'meteor/tmeasday:publish-counts';
 
-const PaginationFactory = ((() => {
-  class Pagination {
-    constructor(collection, settingsIn) {
-      if (!(this instanceof Meteor.Pagination)) {
-        // eslint-disable-next-line max-len
-        throw new Meteor.Error(4000, 'The Meteor.Pagination instance has to be initiated with `new`');
-      }
+class PaginationFactory {
+  constructor(collection, settingsIn) {
+    if (!(this instanceof Meteor.Pagination)) {
+      // eslint-disable-next-line max-len
+      throw new Meteor.Error(4000, 'The Meteor.Pagination instance has to be initiated with `new`');
+    }
 
-      const settings = _.extend(
-        {
-          filters: {},
-          dynamic_filters() {
-            return {};
-          },
+    const settings = _.extend(
+      {
+        filters: {},
+        dynamic_filters() {
+          return {};
         },
-        settingsIn || {}
-      );
+      },
+      settingsIn || {}
+    );
 
-      if (typeof settings.filters !== 'object') {
-        // eslint-disable-next-line max-len
-        throw new Meteor.Error(4001, 'Invalid filters provided. Server side filters need to be an object!');
-      }
-
-      if (typeof settings.dynamic_filters !== 'function') {
-        // eslint-disable-next-line max-len
-        throw new Meteor.Error(4002, 'Invalid dynamic filters provided. Server side dynamic filters needs to be a function!');
-      }
-
-      this.publish(collection, settings);
+    if (typeof settings.filters !== 'object') {
+      // eslint-disable-next-line max-len
+      throw new Meteor.Error(4001, 'Invalid filters provided. Server side filters need to be an object!');
     }
 
-    publish(collection, settings) {
-      Meteor.publish(collection._name, function addPub(query = {}, options = {}) {
-        check(query, Match.Optional(Object));
-        check(options, Match.Optional(Object));
-
-        const self = this;
-        let findQuery = {};
-        let filters = [];
-
-        if (!_.isEmpty(query)) {
-          filters.push(query);
-        }
-
-        if (!_.isEmpty(settings.filters)) {
-          filters.push(settings.filters);
-        }
-
-        const dynamic_filters = settings.dynamic_filters.call(self);
-
-        if (typeof dynamic_filters === 'object') {
-          if (!_.isEmpty(dynamic_filters)) {
-            filters.push(dynamic_filters);
-          }
-        } else {
-          // eslint-disable-next-line max-len
-          throw new Meteor.Error(4002, 'Invalid dynamic filters return type. Server side dynamic filters needs to be a function that returns an object!');
-        }
-
-        if (typeof settings.transform_filters === 'function') {
-          // eslint-disable-next-line max-len
-          filters = settings.transform_filters.call(self, filters);
-        }
-
-        if (filters.length > 0) {
-          if (filters.length > 1) {
-            findQuery.$and = filters;
-          } else {
-            findQuery = filters[0];
-          }
-        }
-
-        Counts.publish(
-          self,
-          `sub_count_${self._subscriptionId}`,
-          collection.find(findQuery),
-          { noReady: true }
-        );
-
-        if (options.debug) {
-          console.log(
-            'Pagination',
-            collection._name,
-            'find',
-            JSON.stringify(findQuery),
-            JSON.stringify(options)
-          );
-        }
-
-        const handle = collection.find(findQuery, options).observeChanges({
-          added(id, fields) {
-            const newFields = {};
-
-            self.added(collection._name, id, fields);
-
-            newFields[`sub_${self._subscriptionId}`] = 1;
-            self.changed(collection._name, id, newFields);
-          },
-          changed(id, fields) {
-            self.changed(collection._name, id, fields);
-          },
-          removed(id) {
-            self.removed(collection._name, id);
-          },
-        });
-
-        self.ready();
-
-        self.onStop(() => {
-          handle.stop();
-        });
-      });
+    if (typeof settings.dynamic_filters !== 'function') {
+      // eslint-disable-next-line max-len
+      throw new Meteor.Error(4002, 'Invalid dynamic filters provided. Server side dynamic filters needs to be a function!');
     }
+
+    this.publish(collection, settings);
   }
 
-  return Pagination;
-}))();
+  publish(collection, settings) {
+    Meteor.publish(collection._name, function addPub(query = {}, options = {}) {
+      check(query, Match.Optional(Object));
+      check(options, Match.Optional(Object));
+
+      const self = this;
+      let findQuery = {};
+      let filters = [];
+
+      if (!_.isEmpty(query)) {
+        filters.push(query);
+      }
+
+      if (!_.isEmpty(settings.filters)) {
+        filters.push(settings.filters);
+      }
+
+      const dynamic_filters = settings.dynamic_filters.call(self);
+
+      if (typeof dynamic_filters === 'object') {
+        if (!_.isEmpty(dynamic_filters)) {
+          filters.push(dynamic_filters);
+        }
+      } else {
+        // eslint-disable-next-line max-len
+        throw new Meteor.Error(4002, 'Invalid dynamic filters return type. Server side dynamic filters needs to be a function that returns an object!');
+      }
+
+      if (typeof settings.transform_filters === 'function') {
+        // eslint-disable-next-line max-len
+        filters = settings.transform_filters.call(self, filters);
+      }
+
+      if (filters.length > 0) {
+        if (filters.length > 1) {
+          findQuery.$and = filters;
+        } else {
+          findQuery = filters[0];
+        }
+      }
+
+      Counts.publish(
+        self,
+        `sub_count_${self._subscriptionId}`,
+        collection.find(findQuery),
+        { noReady: true }
+      );
+
+      if (options.debug) {
+        console.log(
+          'Pagination',
+          collection._name,
+          'find',
+          JSON.stringify(findQuery),
+          JSON.stringify(options)
+        );
+      }
+
+      const handle = collection.find(findQuery, options).observeChanges({
+        added(id, fields) {
+          const newFields = {};
+
+          self.added(collection._name, id, fields);
+
+          newFields[`sub_${self._subscriptionId}`] = 1;
+          self.changed(collection._name, id, newFields);
+        },
+        changed(id, fields) {
+          self.changed(collection._name, id, fields);
+        },
+        removed(id) {
+          self.removed(collection._name, id);
+        },
+      });
+
+      self.ready();
+
+      self.onStop(() => {
+        handle.stop();
+      });
+    });
+  }
+}
 
 Meteor.Pagination = PaginationFactory;
