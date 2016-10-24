@@ -34,11 +34,12 @@ class PaginationFactory {
   }
 
   publish(collection, settings) {
-    Meteor.publish(collection._name, function addPub(query = {}, options = {}) {
+    Meteor.publish(collection._name, function addPub(query = {}, optionsInput = {}) {
       check(query, Match.Optional(Object));
-      check(options, Match.Optional(Object));
+      check(optionsInput, Match.Optional(Object));
 
       const self = this;
+      let options = optionsInput;
       let findQuery = {};
       let filters = [];
 
@@ -62,9 +63,13 @@ class PaginationFactory {
       }
 
       if (typeof settings.transform_filters === 'function') {
-        // eslint-disable-next-line max-len
         filters = settings.transform_filters.call(self, filters);
       }
+
+      if (typeof settings.transform_options === 'function') {
+        options = settings.transform_options.call(self, options, filters);
+      }
+
 
       if (filters.length > 0) {
         if (filters.length > 1) {
