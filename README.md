@@ -37,7 +37,7 @@ new Meteor.Pagination(MyCollection, {
     dynamic_filters: function () {
         return {user_id: this.userId};
     },
-    transform_filters: function (filters) {
+    transform_filters: function (filters, options) {
         // called after filters & dynamic_filters
         allowedKeys = ['_id', 'title'];
         return _.extend(
@@ -45,7 +45,7 @@ new Meteor.Pagination(MyCollection, {
             {user_id: this.userId}
         );
     }
-    transform_options: function (options, filters) {
+    transform_options: function (filters, options) {
         const fields = { name: 1, email: 1 }
         if (Roles.userIsInRole(this.userId, 'admin')) {
             fields.deleted = 1;
@@ -148,7 +148,15 @@ MyListPage = React.createClass({
 For an example on how this can package can be implemented check [the pagination example project](https://github.com/Kurounin/PaginationExample)
 
 
-# Client Pagination available settings on init
+# Server Pagination settings available on init
+
+* `filters`: provide a set of filters on the server side, which can not be overridden (defaults to **{}**, meaning no filters)
+* `dynamic_filters`: provide a function which returns additional filters to be applied (**this** is the publications, receives no other parameters)
+* `transform_filters`: provide a function which returns the modified filters object to be applied (**this** is the publications, receives the current filters and options as parameters)
+* `transform_options`: provide a function which returns the modified options object to be applied (**this** is the publications, receives the current filters and options as parameters)
+
+
+# Client Pagination settings available on init
 
 * `page`: set the initial page, for example the page parameter from url (defaults to **1**)
 * `perPage`: set the number of documents to be fetched per page (defaults to **10**)

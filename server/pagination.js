@@ -63,11 +63,11 @@ class PaginationFactory {
       }
 
       if (typeof settings.transform_filters === 'function') {
-        filters = settings.transform_filters.call(self, filters);
+        filters = settings.transform_filters.call(self, filters, options);
       }
 
       if (typeof settings.transform_options === 'function') {
-        options = settings.transform_options.call(self, options, filters);
+        options = settings.transform_options.call(self, filters, options);
       }
 
 
