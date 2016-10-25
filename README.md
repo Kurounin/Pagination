@@ -39,12 +39,18 @@ new Meteor.Pagination(MyCollection, {
     },
     transform_filters: function (filters) {
         // called after filters & dynamic_filters
-		allowedKeys = ['_id', 'title'];
-
+        allowedKeys = ['_id', 'title'];
         return _.extend(
             _.pick(filters, allowedKeys),
-            { user_id: this.userId }
+            {user_id: this.userId}
         );
+    }
+    transform_options: function (options, filters) {
+        const fields = { name: 1, email: 1 }
+        if (Roles.userIsInRole(this.userId, 'admin')) {
+            fields.deleted = 1;
+        }
+        return _.extend({fields}, options);
     }
 });
 
