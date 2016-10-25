@@ -151,9 +151,9 @@ For an example on how this can package can be implemented check [the pagination 
 # Server Pagination settings available on init
 
 * `filters`: provide a set of filters on the server side, which can not be overridden (defaults to **{}**, meaning no filters)
-* `dynamic_filters`: provide a function which returns additional filters to be applied (**this** is the publications, receives no other parameters)
-* `transform_filters`: provide a function which returns the modified filters object to be applied (**this** is the publications, receives the current filters and options as parameters)
-* `transform_options`: provide a function which returns the modified options object to be applied (**this** is the publications, receives the current filters and options as parameters)
+* `dynamic_filters`: provide a function which returns additional filters to be applied (**this** is the publication; receives no other parameters)
+* `transform_filters`: provide a function which returns the modified filters object to be applied (**this** is the publication; receives the current **filters** and **options** as parameters)
+* `transform_options`: provide a function which returns the modified options object to be applied (**this** is the publication; receives the current **filters** and **options** as parameters)
 
 
 # Client Pagination settings available on init
