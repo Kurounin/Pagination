@@ -77,8 +77,8 @@ class PaginationFactory {
               this.settings.set('ready', true);
           }
         );
-		
-		this.subscriptionId = handle.subscriptionId;
+        
+        this.subscriptionId = handle.subscriptionId;
     });
   }
 
