@@ -61,14 +61,18 @@ For Blaze template
 In your template file (e.g. client/views/mylist.html):
 ```html
 <template name="myList">
-	<div>
-    	<ul>
-          {{#each documents}}
-              <li>Document #{{_id}}</li>
-          {{/each}}
-        </ul>
-        {{> defaultBootstrapPaginator pagination=templatePagination limit=10 containerClass="text-center" onClick=clickEvent}}
-	</div>
+    <div>
+        {{#if isReady}}
+            <ul>
+              {{#each documents}}
+                  <li>Document #{{_id}}</li>
+              {{/each}}
+            </ul>
+            {{> defaultBootstrapPaginator pagination=templatePagination limit=10 containerClass="text-center" onClick=clickEvent}}
+        {{else}}
+            Loading...
+        {{/if}}
+    </div>
 </template>
 ```
 **[kurounin:pagination-blaze](https://atmospherejs.com/kurounin/pagination-blaze) package is needed for paginator**
@@ -77,7 +81,7 @@ In your template file (e.g. client/views/mylist.html):
 In your template javascript file (e.g. client/scripts/mylist.js):
 ```js
 Template.myList.created = function () {
-	this.pagination = new Meteor.Pagination(MyCollection, {
+    this.pagination = new Meteor.Pagination(MyCollection, {
         sort: {
             _id: -1
         }
@@ -85,13 +89,16 @@ Template.myList.created = function () {
 }
 
 Template.myList.helpers({
+    isReady: function () {
+        return Template.instance().pagination.ready();
+    },
     templatePagination: function () {
         return Template.instance().pagination;
     },
-	documents: function () {
-		return Template.instance().pagination.getPage();
-	},
-	// optional helper used to return a callback that should be executed before changing the page
+    documents: function () {
+        return Template.instance().pagination.getPage();
+    },
+    // optional helper used to return a callback that should be executed before changing the page
     clickEvent: function() {
         return function(e, templateInstance, clickedPage) {
             e.preventDefault();
@@ -119,22 +126,28 @@ MyListPage = React.createClass({
 
     renderDocument: function(document) {
         return (
-        	<li>Document #{document._id}	</li>
+            <li>Document #{document._id}    </li>
         );
     },
 
     render: function() {
+        if (!this.pagination.ready()) {
+            return (
+                <div>Loading...</div>
+            );
+        }
+
         return (
-          <div>
-              <ul>
-                  {this.data.documents.map(this.renderDocument)}
-              </ul>
-              <DefaultBootstrapPaginator
-                  pagination={this.pagination}
-                  limit={10}
-                  containerClass="text-center"
-                  />
-          </div>
+            <div>
+                <ul>
+                    {this.data.documents.map(this.renderDocument)}
+                </ul>
+                <DefaultBootstrapPaginator
+                    pagination={this.pagination}
+                    limit={10}
+                    containerClass="text-center"
+                    />
+            </div>
         );
     }
 });

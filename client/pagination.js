@@ -48,9 +48,38 @@ class PaginationFactory {
       this.debug(settings.debug);
     }
 
-    if (!this.ready()) {
-      this.ready(false);
-    }
+    Tracker.autorun(() => {
+        const options = {
+          fields: this.fields(),
+          sort: this.sort(),
+          skip: (this.currentPage() - 1) * this.perPage(),
+          limit: this.perPage(),
+        };
+
+        if (this.debug()) {
+          console.log(
+            'Pagination',
+            this.collection._name,
+            'subscribe',
+            JSON.stringify(this.filters()),
+            JSON.stringify(options)
+          );
+          options.debug = true;
+        }
+
+        this.settings.set('ready', false);
+
+        const handle = Meteor.subscribe(
+          this.collection._name,
+          this.filters(),
+          options,
+          () => {
+              this.settings.set('ready', true);
+          }
+        );
+		
+		this.subscriptionId = handle.subscriptionId;
+    });
   }
 
   currentPage(page) {
@@ -108,10 +137,7 @@ class PaginationFactory {
     return Math.ceil(totalPages || 1);
   }
 
-  ready(ready) {
-    if (arguments.length === 1) {
-      this.settings.set('ready', ready);
-    }
+  ready() {
     return this.settings.get('ready');
   }
 
@@ -123,38 +149,13 @@ class PaginationFactory {
   }
 
   getPage() {
-    const options = {
-      fields: this.fields(),
-      sort: this.sort(),
-      skip: (this.currentPage() - 1) * this.perPage(),
-      limit: this.perPage(),
-    };
-
-    if (this.debug()) {
-      console.log(
-        'Pagination',
-        this.collection._name,
-        'subscribe',
-        JSON.stringify(this.filters()),
-        JSON.stringify(options)
-      );
-      options.debug = true;
-    }
-
-    const handle = Meteor.subscribe(
-      this.collection._name,
-      this.filters(),
-      options
-    );
-
     const query = {};
 
-    this.ready(handle.ready());
-    if (handle.ready()) {
-      this.totalItems(Counts.get(`sub_count_${handle.subscriptionId}`));
+    if (this.ready()) {
+      this.totalItems(Counts.get(`sub_count_${this.subscriptionId}`));
     }
 
-    query[`sub_${handle.subscriptionId}`] = 1;
+    query[`sub_${this.subscriptionId}`] = 1;
 
     const optionsFind = { fields: this.fields(), sort: this.sort() };
 
