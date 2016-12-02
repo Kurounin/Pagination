@@ -1,7 +1,7 @@
 Package.describe({
   name: 'kurounin:pagination',
   summary: 'Meteor pagination done right. Usable in ReactJS or Blaze templates.',
-  version: '1.0.16',
+  version: '1.0.17',
   git: 'https://github.com/Kurounin/Pagination.git',
   documentation: 'README.md',
 });
@@ -22,6 +22,7 @@ Package.onUse((api) => {
   ], 'server');
 
   api.use([
+    'tracker',
     'reactive-var',
     'reactive-dict',
   ], 'client');
