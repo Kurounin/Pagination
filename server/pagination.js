@@ -22,7 +22,7 @@ class PaginationFactory {
 
       settingsIn || {}
     );
-    console.log(settings.name);
+   
 
     if (typeof settings.filters !== 'object') {
       // eslint-disable-next-line max-len
@@ -38,8 +38,7 @@ class PaginationFactory {
   }
 
   publish(collection, settings) {
-    console.log(collection);
-    console.log(settings);
+    
 
     Meteor.publish(settings.name, function addPub(query = {}, optionsInput = {}) {
       check(query, Match.Optional(Object));
