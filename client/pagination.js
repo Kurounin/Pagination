@@ -15,6 +15,7 @@ class PaginationFactory {
     this.settings = new ReactiveDict();
     const settings = _.extend(
       {
+        name : collection._name,
         page: 1,
         perPage: 10,
         filters: {},
@@ -27,6 +28,9 @@ class PaginationFactory {
 
     if (!this.currentPage()) {
       this.currentPage(settings.page);
+    }
+    if (!this.name()) {
+      this.name(settings.name);
     }
 
     if (!this.perPage()) {
@@ -51,6 +55,7 @@ class PaginationFactory {
 
     Tracker.autorun(() => {
         const options = {
+
           fields: this.fields(),
           sort: this.sort(),
           skip: (this.currentPage() - 1) * this.perPage(),
@@ -60,7 +65,7 @@ class PaginationFactory {
         if (this.debug()) {
           console.log(
             'Pagination',
-            this.collection._name,
+            this.name(),
             'subscribe',
             JSON.stringify(this.filters()),
             JSON.stringify(options)
@@ -71,14 +76,14 @@ class PaginationFactory {
         this.settings.set('ready', false);
 
         const handle = Meteor.subscribe(
-          this.collection._name,
+                this.name(),
           this.filters(),
           options,
           () => {
               this.settings.set('ready', true);
           }
         );
-        
+
         this.subscriptionId = handle.subscriptionId;
     });
   }
@@ -99,6 +104,12 @@ class PaginationFactory {
       }
     }
     return this.settings.get('perPage');
+  }
+  name(name){
+    if (arguments.length === 1) {
+      this.settings.set('name', !_.isEmpty(name) ? name : {});
+    }
+    return this.settings.get('name');
   }
 
   filters(filters) {
@@ -163,7 +174,7 @@ class PaginationFactory {
     if (this.debug()) {
       console.log(
         'Pagination',
-        this.collection._name,
+        this.name(),
         'find',
         JSON.stringify(query),
         JSON.stringify(optionsFind)

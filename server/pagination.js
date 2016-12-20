@@ -12,13 +12,17 @@ class PaginationFactory {
 
     const settings = _.extend(
       {
+        name : collection._name,
         filters: {},
         dynamic_filters() {
           return {};
         },
       },
+
+
       settingsIn || {}
     );
+   
 
     if (typeof settings.filters !== 'object') {
       // eslint-disable-next-line max-len
@@ -34,7 +38,9 @@ class PaginationFactory {
   }
 
   publish(collection, settings) {
-    Meteor.publish(collection._name, function addPub(query = {}, optionsInput = {}) {
+    
+
+    Meteor.publish(settings.name, function addPub(query = {}, optionsInput = {}) {
       check(query, Match.Optional(Object));
       check(optionsInput, Match.Optional(Object));
 
@@ -89,7 +95,7 @@ class PaginationFactory {
       if (options.debug) {
         console.log(
           'Pagination',
-          collection._name,
+          settings.name,
           'find',
           JSON.stringify(findQuery),
           JSON.stringify(options)
