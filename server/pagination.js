@@ -18,8 +18,6 @@ class PaginationFactory {
           return {};
         },
       },
-
-
       settingsIn || {}
     );
    
@@ -38,8 +36,6 @@ class PaginationFactory {
   }
 
   publish(collection, settings) {
-    
-
     Meteor.publish(settings.name, function addPub(query = {}, optionsInput = {}) {
       check(query, Match.Optional(Object));
       check(optionsInput, Match.Optional(Object));
@@ -75,7 +71,6 @@ class PaginationFactory {
       if (typeof settings.transform_options === 'function') {
         options = settings.transform_options.call(self, filters, options);
       }
-
 
       if (filters.length > 0) {
         if (filters.length > 1) {

@@ -26,11 +26,10 @@ class PaginationFactory {
       settingsIn || {}
     );
 
+	this.settings.set('name', settings.name);
+
     if (!this.currentPage()) {
       this.currentPage(settings.page);
-    }
-    if (!this.name()) {
-      this.name(settings.name);
     }
 
     if (!this.perPage()) {
@@ -65,7 +64,7 @@ class PaginationFactory {
         if (this.debug()) {
           console.log(
             'Pagination',
-            this.name(),
+            this.settings.get('name'),
             'subscribe',
             JSON.stringify(this.filters()),
             JSON.stringify(options)
@@ -76,7 +75,7 @@ class PaginationFactory {
         this.settings.set('ready', false);
 
         const handle = Meteor.subscribe(
-                this.name(),
+          this.settings.get('name'),
           this.filters(),
           options,
           () => {
@@ -104,12 +103,6 @@ class PaginationFactory {
       }
     }
     return this.settings.get('perPage');
-  }
-  name(name){
-    if (arguments.length === 1) {
-      this.settings.set('name', !_.isEmpty(name) ? name : {});
-    }
-    return this.settings.get('name');
   }
 
   filters(filters) {
@@ -174,7 +167,7 @@ class PaginationFactory {
     if (this.debug()) {
       console.log(
         'Pagination',
-        this.name(),
+        this.settings.get('name'),
         'find',
         JSON.stringify(query),
         JSON.stringify(optionsFind)
