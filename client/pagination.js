@@ -89,18 +89,17 @@ class PaginationFactory {
 
   currentPage(page) {
     if (arguments.length === 1) {
-      if (this.settings.get('page') !== page && page >= 1) {
+      if (page >= 1) {
         this.settings.set('page', page);
       }
-    }
-    return this.settings.get('page');
+    } else {
+      return this.settings.get('page');
+	}
   }
 
   perPage(perPage) {
     if (arguments.length === 1) {
-      if (this.settings.get('perPage') !== perPage) {
-        this.settings.set('perPage', perPage);
-      }
+      this.settings.set('perPage', perPage);
     }
     return this.settings.get('perPage');
   }
