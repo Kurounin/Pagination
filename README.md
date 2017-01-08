@@ -80,13 +80,13 @@ In your template file (e.g. client/views/mylist.html):
 
 In your template javascript file (e.g. client/scripts/mylist.js):
 ```js
-Template.myList.created = function () {
+Template.myList.onCreated(function () {
     this.pagination = new Meteor.Pagination(MyCollection, {
         sort: {
             _id: -1
         }
     });
-}
+});
 
 Template.myList.helpers({
     isReady: function () {
