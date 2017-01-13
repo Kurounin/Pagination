@@ -12,7 +12,7 @@ class PaginationFactory {
 
     const settings = _.extend(
       {
-        name : collection._name,
+        name: collection._name,
         filters: {},
         dynamic_filters() {
           return {};
@@ -20,7 +20,6 @@ class PaginationFactory {
       },
       settingsIn || {}
     );
-   
 
     if (typeof settings.filters !== 'object') {
       // eslint-disable-next-line max-len

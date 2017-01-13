@@ -1,7 +1,7 @@
 import { _ } from 'meteor/underscore';
 import { Meteor } from 'meteor/meteor';
 import { ReactiveDict } from 'meteor/reactive-dict';
-import { Tracker } from 'meteor/tracker'
+import { Tracker } from 'meteor/tracker';
 import { Counts } from 'meteor/tmeasday:publish-counts';
 
 class PaginationFactory {
@@ -15,7 +15,7 @@ class PaginationFactory {
     this.settings = new ReactiveDict();
     const settings = _.extend(
       {
-        name : collection._name,
+        name: collection._name,
         page: 1,
         perPage: 10,
         filters: {},
@@ -26,7 +26,7 @@ class PaginationFactory {
       settingsIn || {}
     );
 
-	this.settings.set('name', settings.name);
+    this.settings.set('name', settings.name);
 
     if (!this.currentPage()) {
       this.currentPage(settings.page);
@@ -52,38 +52,95 @@ class PaginationFactory {
       this.debug(settings.debug);
     }
 
+    this._activeObservers = {};
+
     Tracker.autorun(() => {
-        const options = {
+      const options = {
+        fields: this.fields(),
+        sort: this.sort(),
+        skip: (this.currentPage() - 1) * this.perPage(),
+        limit: this.perPage(),
+      };
 
-          fields: this.fields(),
-          sort: this.sort(),
-          skip: (this.currentPage() - 1) * this.perPage(),
-          limit: this.perPage(),
-        };
-
-        if (this.debug()) {
-          console.log(
-            'Pagination',
-            this.settings.get('name'),
-            'subscribe',
-            JSON.stringify(this.filters()),
-            JSON.stringify(options)
-          );
-          options.debug = true;
-        }
-
-        this.settings.set('ready', false);
-
-        const handle = Meteor.subscribe(
+      if (this.debug()) {
+        console.log(
+          'Pagination',
           this.settings.get('name'),
-          this.filters(),
-          options,
-          () => {
-              this.settings.set('ready', true);
-          }
+          'subscribe',
+          JSON.stringify(this.filters()),
+          JSON.stringify(options)
         );
+        options.debug = true;
+      }
 
-        this.subscriptionId = handle.subscriptionId;
+      this.settings.get('resubscribe');
+
+      this.settings.set('ready', false);
+
+      this.subscription = Meteor.subscribe(
+        this.settings.get('name'),
+        this.filters(),
+        options,
+        () => {
+          this.settings.set('ready', true);
+        }
+      );
+    });
+  }
+
+  _checkObservers() {
+    if (!Tracker.active) {
+      return;
+    }
+
+    const currentComputationId = Tracker.currentComputation._id;
+
+    if (!this._activeObservers.hasOwnProperty(currentComputationId)) {
+      return;
+    }
+
+    if (_.isEmpty(this._activeObservers) && !this.subscription) {
+      this.settings.set('resubscribe', currentComputationId);
+    }
+
+    this._activeObservers[currentComputationId] = true;
+
+    Tracker.currentComputation.onStop((c) => {
+      // only mark the computation as stopped for future computations
+      if (this._activeObservers[c._id] === true) {
+        this._activeObservers[c._id] = false;
+      }
+    });
+
+    Tracker.onInvalidate((c) => {
+      // remove stopped computations
+      _.each(this._activeObservers, (value, id) => {
+        if (!value) {
+          delete this._activeObservers[id];
+        }
+      });
+
+      if (c.stopped && this._activeObservers.hasOwnProperty(c._id)) {
+        delete this._activeObservers[c._id];
+
+        // unsubscribe if all computations were stopped
+        if (_.isEmpty(this._activeObservers)) {
+          if (this.debug()) {
+            console.log(
+              'Pagination',
+              this.settings.get('name'),
+              'unsubscribe'
+            );
+          }
+
+          if (this.subscription) {
+            this.subscription.stop();
+
+            this.subscription = null;
+            this.settings.set('ready', false);
+          }
+        }
+      }
     });
   }
 
@@ -94,72 +151,85 @@ class PaginationFactory {
       }
     } else {
       return this.settings.get('page');
-	}
+    }
   }
 
   perPage(perPage) {
     if (arguments.length === 1) {
       this.settings.set('perPage', perPage);
+    } else {
+      return this.settings.get('perPage');
     }
-    return this.settings.get('perPage');
   }
 
   filters(filters) {
     if (arguments.length === 1) {
       this.settings.set('filters', !_.isEmpty(filters) ? filters : {});
+    } else {
+      return this.settings.get('filters');
     }
-    return this.settings.get('filters');
   }
 
   fields(fields) {
     if (arguments.length === 1) {
       this.settings.set('fields', fields);
+    } else {
+      return this.settings.get('fields');
     }
-    return this.settings.get('fields');
   }
 
   sort(sort) {
     if (arguments.length === 1) {
       this.settings.set('sort', sort);
+    } else {
+      return this.settings.get('sort');
     }
-    return this.settings.get('sort');
   }
 
-  totalItems(totalItems) {
-    if (arguments.length === 1) {
-      this.settings.set('totalItems', totalItems);
-      if (this.currentPage() > 1 && totalItems <= this.perPage() * this.currentPage()) {
-        // move to last page available
-        this.currentPage(this.totalPages());
-      }
-    }
+  totalItems() {
     return this.settings.get('totalItems');
   }
 
   totalPages() {
     const totalPages = this.totalItems() / this.perPage();
+
     return Math.ceil(totalPages || 1);
   }
 
   ready() {
+    this._checkObservers();
+
     return this.settings.get('ready');
   }
 
   debug(debug) {
     if (arguments.length === 1) {
       this.settings.set('debug', debug);
+    } else {
+      return this.settings.get('debug');
     }
-    return this.settings.get('debug');
   }
 
   getPage() {
     const query = {};
 
-    if (this.ready()) {
-      this.totalItems(Counts.get(`sub_count_${this.subscriptionId}`));
+    if (!this.subscription) {
+      this.settings.get('resubscribe');
+
+      return [];
     }
 
-    query[`sub_${this.subscriptionId}`] = 1;
+    if (this.ready()) {
+      const totalItems = Counts.get(`sub_count_${this.subscription.subscriptionId}`);
+      this.settings.set('totalItems', totalItems);
+
+      if (this.currentPage() > 1 && totalItems <= this.perPage() * this.currentPage()) {
+        // move to last page available
+        this.currentPage(this.totalPages());
+      }
+    }
+
+    query[`sub_${this.subscription.subscriptionId}`] = 1;
 
     const optionsFind = { fields: this.fields(), sort: this.sort() };
 
@@ -173,6 +243,8 @@ class PaginationFactory {
       );
       optionsFind.debug = true;
     }
+
+    this._checkObservers();
 
     return this.collection.find(query, optionsFind).fetch();
   }
