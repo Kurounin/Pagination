@@ -158,7 +158,7 @@ MyListPage = React.createClass({
 
 
 # Demo project
-For an example on how this can package can be implemented check [the pagination example project](https://github.com/Kurounin/PaginationExample)
+For an example on how this package can be implemented check [the pagination example project](https://github.com/Kurounin/PaginationExample) or [the react pagination example project](https://github.com/Kurounin/PaginationReactExample)
 
 
 # Server Pagination settings available on init
