@@ -95,7 +95,7 @@ class PaginationFactory {
 
     const currentComputationId = Tracker.currentComputation._id;
 
-    if (!this._activeObservers.hasOwnProperty(currentComputationId)) {
+    if (this._activeObservers.hasOwnProperty(currentComputationId)) {
       return;
     }
 
