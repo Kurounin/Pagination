@@ -50,7 +50,8 @@ new Meteor.Pagination(MyCollection, {
         if (Roles.userIsInRole(this.userId, 'admin')) {
             fields.deleted = 1;
         }
-        return _.extend({fields}, options);
+        options.fields = _.extend(fields, options.fields);
+        return options;
     }
 });
 
