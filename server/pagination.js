@@ -83,41 +83,52 @@ class PaginationFactory {
         self,
         `sub_count_${self._subscriptionId}`,
         collection.find(findQuery),
-        { noReady: true }
+        {
+          noReady: true,
+          nonReactive: !options.reactive
+        }
       );
 
       if (options.debug) {
         console.log(
           'Pagination',
           settings.name,
-          'find',
+          options.reactive ? 'reactive' : 'non-reactive',
+          'publish',
           JSON.stringify(findQuery),
           JSON.stringify(options)
         );
       }
 
-      const handle = collection.find(findQuery, options).observeChanges({
-        added(id, fields) {
-          const newFields = {};
+      if (!options.reactive) {
+        const docs = collection.find(findQuery, options).fetch();
 
-          self.added(collection._name, id, fields);
+        _.each(docs, function(doc) {
+              self.added(collection._name, doc._id, doc);
 
-          newFields[`sub_${self._subscriptionId}`] = 1;
-          self.changed(collection._name, id, newFields);
-        },
-        changed(id, fields) {
-          self.changed(collection._name, id, fields);
-        },
-        removed(id) {
-          self.removed(collection._name, id);
-        },
-      });
+              self.changed(collection._name, doc._id, {[`sub_${self._subscriptionId}`]: 1});
+        });
+      } else {
+          const handle = collection.find(findQuery, options).observeChanges({
+              added(id, fields) {
+                  self.added(collection._name, id, fields);
+
+                  self.changed(collection._name, id, {[`sub_${self._subscriptionId}`]: 1});
+              },
+              changed(id, fields) {
+                  self.changed(collection._name, id, fields);
+              },
+              removed(id) {
+                  self.removed(collection._name, id);
+              },
+          });
+
+          self.onStop(() => {
+              handle.stop();
+          });
+      }
 
       self.ready();
-
-      self.onStop(() => {
-        handle.stop();
-      });
     });
   }
 }

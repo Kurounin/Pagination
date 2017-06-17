@@ -181,6 +181,7 @@ You can also checkout [this example application in React](https://github.com/mgs
 * `filters`: filters to be applied to the subscription (defaults to **{}**, meaning no filters)
 * `fields`: fields to be returned (defaults to **{}**, meaning all fields)
 * `sort`: set the sorting for retrieved documents (defaults to **{_id: -1}**)
+* `reactive`: set the subscription reactivity, allowing to only retrieve the initial results when set to false (defaults to **true**)
 * `debug`: console logs the query and options used when performing the find (defaults to **false**)
 
 

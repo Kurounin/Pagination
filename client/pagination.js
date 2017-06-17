@@ -21,6 +21,7 @@ class PaginationFactory {
         filters: {},
         fields: {},
         sort: { _id: 1 },
+        reactive: true,
         debug: false
       },
       settingsIn || {}
@@ -60,12 +61,14 @@ class PaginationFactory {
         sort: this.sort(),
         skip: (this.currentPage() - 1) * this.perPage(),
         limit: this.perPage(),
+        reactive: settings.reactive
       };
 
       if (this.debug()) {
         console.log(
           'Pagination',
           this.settings.get('name'),
+          options.reactive === false ? 'non-reactive' : 'reactive',
           'subscribe',
           JSON.stringify(this.filters()),
           JSON.stringify(options)
