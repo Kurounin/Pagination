@@ -25,14 +25,15 @@ MyCollection = new Meteor.Collection('myCollectionName');
 
 In your publications file (e.g. server/publications.js):
 ```js
-new Meteor.Pagination(MyCollection);
+import { publishPagination } from 'meteor/kurounin:pagination';
 
+publishPagination(MyCollection);
 ```
 
-Optionally you can provide a set of filters on the server side or even dynamic filters, which can not be overridden.
+Optionally you can provide a set of filters on the server-side or even dynamic filters, which can not be overridden.
 There's also the option of providing a transformation filter function to validate the client filters (e.g. server/publications.js):
 ```js
-new Meteor.Pagination(MyCollection, {
+publishPagination(MyCollection, {
     filters: {is_published: true},
     dynamic_filters: function () {
         return {user_id: this.userId};
@@ -167,7 +168,7 @@ You can also checkout [this example application in React](https://github.com/mgs
 # Server Pagination settings available on init
 
 * `name`: set the publication name (defaults to **collection name**)
-* `filters`: provide a set of filters on the server side, which can not be overridden (defaults to **{}**, meaning no filters)
+* `filters`: provide a set of filters on the server-side, which can not be overridden (defaults to **{}**, meaning no filters)
 * `dynamic_filters`: provide a function which returns additional filters to be applied (**this** is the publication; receives no other parameters)
 * `transform_filters`: provide a function which returns the modified filters object to be applied (**this** is the publication; receives the current **filters** and **options** as parameters)
 * `transform_options`: provide a function which returns the modified options object to be applied (**this** is the publication; receives the current **filters** and **options** as parameters)
