@@ -14,6 +14,8 @@ Features
 + **Bootstrap 3 compatible navigation template**. Blaze template for a bootstrap 3 styled paginator.
 + **Bootstrap 3 compatible navigation react class**. ReactJS class for a bootstrap 3 styled paginator.
 
+# Installation
+```meteor add kurounin:pagination```
 
 # Usage
 
