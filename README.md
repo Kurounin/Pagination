@@ -169,7 +169,7 @@ You can also checkout [this example application in React](https://github.com/mgs
 
 # Server Pagination settings available on init
 
-* `name`: set the publication name (defaults to **collection name**)
+* `name`: set the publication name (defaults to **collection name**; *needs to be unique, to not collide with other publications*)
 * `filters`: provide a set of filters on the server-side, which can not be overridden (defaults to **{}**, meaning no filters)
 * `dynamic_filters`: provide a function which returns additional filters to be applied (**this** is the publication; receives no other parameters)
 * `transform_filters`: provide a function which returns the modified filters object to be applied (**this** is the publication; receives the current **filters** and **options** as parameters)
@@ -178,7 +178,7 @@ You can also checkout [this example application in React](https://github.com/mgs
 
 # Client Pagination settings available on init
 
-* `name`: set the subscription name (defaults to **collection name**)
+* `name`: set the subscription name (defaults to **collection name**; *needs to be identical with the server side publication name*)
 * `page`: set the initial page, for example the page parameter from url (defaults to **1**)
 * `perPage`: set the number of documents to be fetched per page (defaults to **10**)
 * `filters`: filters to be applied to the subscription (defaults to **{}**, meaning no filters)
