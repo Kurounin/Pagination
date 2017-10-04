@@ -17,6 +17,15 @@ Features
 # Installation
 ```meteor add kurounin:pagination```
 
+**For Blaze paginator install [kurounin:pagination-blaze](https://atmospherejs.com/kurounin/pagination-blaze) package**
+```meteor add kurounin:pagination```
+
+**For ReactJS paginator in Meteor 1.2 install [kurounin:pagination-reactjs](https://atmospherejs.com/kurounin/pagination-reactjs) package**
+```meteor add kurounin:pagination-reactjs```
+
+**For ReactJS paginator in Meteor 1.3+ install [react-bootstrap-pagination](https://www.npmjs.com/package/react-bootstrap-pagination) npm package**
+```npm i react-bootstrap-pagination```
+
 # Usage
 
 In your collections file (e.g. lib/collections.js):
@@ -158,7 +167,7 @@ MyListPage = React.createClass({
 ```
 **For Meteor 1.2 [kurounin:pagination-reactjs](https://atmospherejs.com/kurounin/pagination-reactjs) package is needed for paginator**
 
-**For Meteor 1.3 [react-bootstrap-pagination](https://www.npmjs.com/package/react-bootstrap-pagination) npm package is needed for paginator**
+**For Meteor 1.3+ [react-bootstrap-pagination](https://www.npmjs.com/package/react-bootstrap-pagination) npm package is needed for paginator**
 
 
 # Demo project
@@ -213,6 +222,9 @@ Available template parameters are:
 * `pagination`: pagination instance
 * `limit`: the maximum number of page links to display
 * `containerClass`: optional container class for the paginator
+* `paginationClass`: optional class for the *ul* element (defaults to `pagination`)
+* `itemClass`: optional class for the page links elements
+* `wrapLinks`: if set to true page links will be wrapped in *li* elements (defaults to `true`)
 * `onClick`: optional callback to be called when page link is clicked (default callback runs `e.preventDefault()`)
 
 
