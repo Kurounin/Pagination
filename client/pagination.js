@@ -20,6 +20,7 @@ class PaginationFactory {
         perPage: 10,
         filters: {},
         fields: {},
+        skip: 0,
         sort: { _id: 1 },
         reactive: true,
         debug: false
@@ -45,6 +46,10 @@ class PaginationFactory {
       this.fields(settings.fields);
     }
 
+    if (!this.skip()) {
+      this.skip(settings.skip);
+    }
+
     if (!this.sort()) {
       this.sort(settings.sort);
     }
@@ -59,7 +64,7 @@ class PaginationFactory {
       const options = {
         fields: this.fields(),
         sort: this.sort(),
-        skip: (this.currentPage() - 1) * this.perPage(),
+        skip: (this.currentPage() - 1) * this.perPage() + this.skip(),
         limit: this.perPage(),
         reactive: settings.reactive
       };
@@ -181,6 +186,14 @@ class PaginationFactory {
     }
   }
 
+  skip(skip) {
+    if (arguments.length === 1) {
+      this.settings.set('skip', skip);
+    } else {
+      return this.settings.get('skip');
+    }
+  }
+
   sort(sort) {
     if (arguments.length === 1) {
       this.settings.set('sort', sort);
@@ -249,6 +262,7 @@ class PaginationFactory {
 
     this._checkObservers();
 
+    console.log(this.collection.find(query, optionsFind).fetch());
     return this.collection.find(query, optionsFind).fetch();
   }
 }
