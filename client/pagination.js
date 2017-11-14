@@ -262,7 +262,6 @@ class PaginationFactory {
 
     this._checkObservers();
 
-    console.log(this.collection.find(query, optionsFind).fetch());
     return this.collection.find(query, optionsFind).fetch();
   }
 }
