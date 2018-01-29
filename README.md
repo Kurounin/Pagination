@@ -56,7 +56,7 @@ publishPagination(MyCollection, {
             _.pick(filters, allowedKeys),
             {user_id: this.userId}
         );
-    }
+    },
     transform_options: function (filters, options) {
         const fields = { name: 1, email: 1 }
         if (Roles.userIsInRole(this.userId, 'admin')) {
