@@ -189,8 +189,8 @@ You can also checkout [this example application in React](https://github.com/mgs
 * `name`: set the publication name (defaults to **collection name**; *needs to be unique, to not collide with other publications*)
 * `filters`: provide a set of filters on the server-side, which can not be overridden (defaults to **{}**, meaning no filters)
 * `dynamic_filters`: provide a function which returns additional filters to be applied (**this** is the publication; receives no other parameters)
-* `transform_filters`: provide a function which returns the modified filters object to be applied (**this** is the publication; receives the current **filters** and **options** as parameters)
-* `transform_options`: provide a function which returns the modified options object to be applied (**this** is the publication; receives the current **filters** and **options** as parameters)
+* `transform_filters`: provide a function which returns the modified filters object to be applied (**this** is the publication; receives the current **filters** as an array containing the client & server defined filters and **options** as parameters)
+* `transform_options`: provide a function which returns the modified options object to be applied (**this** is the publication; receives the current **filters** as an array containing the client & server defined filters and **options** as parameters)
 
 
 # Client Pagination settings available on init
