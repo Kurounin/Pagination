@@ -11,8 +11,8 @@ Features
 + **Instant changes propagation**. Any document changes are instantly propagated, thanks to light-weight modifications of subscription mechanism.
 + **Easy integration**. The package works out of the box. Page changes are triggered by a single reactive dictionary variable.
 + **Multiple collections per page**. Each Pagination instance runs independently. You can even create multiple paginations for one collection on a single page.
-+ **Bootstrap 3 compatible navigation template**. Blaze template for a bootstrap 3 styled paginator.
-+ **Bootstrap 3 compatible navigation react class**. ReactJS class for a bootstrap 3 styled paginator.
++ **Bootstrap 3 and 4 compatible navigation template**. Blaze template for a bootstrap 3 and 4 styled paginator.
++ **Bootstrap 3 and 4 compatible navigation react class**. ReactJS class for a bootstrap 3 and 4 styled paginator.
 
 # Installation
 ```meteor add kurounin:pagination```
@@ -223,8 +223,9 @@ You can also checkout [this example application in React](https://github.com/mgs
 
 A Blaze template is provided to allow navigation through available pages:
 
+In the template html file add the paginator
 ```html
-{{> defaultBootstrapPaginator pagination=templatePagination limit=10 containerClass="text-center" onClick=clickEvent}}
+{{> defaultBootstrapPaginator pagination=templatePagination onClick=clickEvent limit=10 containerClass="text-center"}}
 ```
 Available template parameters are:
 * `pagination`: pagination instance
