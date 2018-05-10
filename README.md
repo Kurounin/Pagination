@@ -52,17 +52,17 @@ publishPagination(MyCollection, {
     transform_filters: function (filters, options) {
         // called after filters & dynamic_filters
         allowedKeys = ['_id', 'title'];
-		
-		const modifiedFilters = [];
-		
-		// filters is an array of the provided filters (client side filters & server side filters)
-		for (let i = 0; i < filters.length; i++) {
-			modifiedFilters[i] =  _.extend(
+
+        const modifiedFilters = [];
+
+        // filters is an array of the provided filters (client side filters & server side filters)
+        for (let i = 0; i < filters.length; i++) {
+        	modifiedFilters[i] =  _.extend(
                _.pick(filters[i], allowedKeys),
                {user_id: this.userId}
            );
-		}
-		
+        }
+
         return modifiedFilters;
     },
     transform_options: function (filters, options) {
