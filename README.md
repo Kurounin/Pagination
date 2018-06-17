@@ -198,6 +198,7 @@ You can also checkout [this example application in React](https://github.com/mgs
 * `name`: set the subscription name (defaults to **collection name**; *needs to be identical with the server side publication name*)
 * `page`: set the initial page, for example the page parameter from url (defaults to **1**)
 * `perPage`: set the number of documents to be fetched per page (defaults to **10**)
+* `skip`: set the number of documents that should be skipped when fetching a page (defaults to **0**)
 * `filters`: filters to be applied to the subscription (defaults to **{}**, meaning no filters)
 * `fields`: fields to be returned (defaults to **{}**, meaning all fields)
 * `sort`: set the sorting for retrieved documents (defaults to **{_id: -1}**)
@@ -209,6 +210,7 @@ You can also checkout [this example application in React](https://github.com/mgs
 
 * `currentPage([int])`: get/set the current page
 * `perPage([int])`: get/set the number of documents per page
+* `skip([int])`: get/set the number of documents to skip
 * `filters([Object])`: get/set the current filters
 * `fields([Object])`: get/set the retrieved fields
 * `sort([Object])`: get/set the sorting order
