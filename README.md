@@ -191,6 +191,7 @@ You can also checkout [this example application in React](https://github.com/mgs
 * `dynamic_filters`: provide a function which returns additional filters to be applied (**this** is the publication; receives no other parameters)
 * `transform_filters`: provide a function which returns the modified filters object to be applied (**this** is the publication; receives the current **filters** as an array containing the client & server defined filters and **options** as parameters)
 * `transform_options`: provide a function which returns the modified options object to be applied (**this** is the publication; receives the current **filters** as an array containing the client & server defined filters and **options** as parameters)
+* `countInterval`: set the interval in ms at which the subscription count is updated (defaults to **10000**, meaning every 10s)
 
 
 # Client Pagination settings available on init
@@ -218,6 +219,7 @@ You can also checkout [this example application in React](https://github.com/mgs
 * `totalItems()`: get the total number of documents
 * `totalPages()`: get the total number of pages
 * `ready()`: checks if the subscription for the current page is ready
+* `refresh()`: forcefully refreshes the subscription (useful for non-reactive subscriptions)
 * `getPage()`: returns the documents for the current page
 
 

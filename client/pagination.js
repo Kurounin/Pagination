@@ -2,7 +2,14 @@ import { _ } from 'meteor/underscore';
 import { Meteor } from 'meteor/meteor';
 import { ReactiveDict } from 'meteor/reactive-dict';
 import { Tracker } from 'meteor/tracker';
-import { Counts } from 'meteor/tmeasday:publish-counts';
+
+const Counts = new Meteor.Collection('pagination-counts');
+
+function getSubscriptionCount(id) {
+  const doc = Counts.findOne(id);
+
+  return (doc && doc.count) || 0;
+}
 
 class PaginationFactory {
   constructor(collection, settingsIn = {}) {
@@ -108,7 +115,7 @@ class PaginationFactory {
     }
 
     if (_.isEmpty(this._activeObservers) && !this.subscription) {
-      this.settings.set('resubscribe', currentComputationId);
+      this.settings.set('resubscribe', Date.now());
     }
 
     this._activeObservers[currentComputationId] = true;
@@ -226,6 +233,10 @@ class PaginationFactory {
     }
   }
 
+  refresh() {
+    this.settings.set('resubscribe', Date.now());
+  }
+
   getPage() {
     const query = {};
 
@@ -236,7 +247,7 @@ class PaginationFactory {
     }
 
     if (this.ready()) {
-      const totalItems = Counts.get(`sub_count_${this.subscription.subscriptionId}`);
+      const totalItems = getSubscriptionCount(`sub_${this.subscription.subscriptionId}`);
       this.settings.set('totalItems', totalItems);
 
       if (this.currentPage() > 1 && totalItems <= this.perPage() * this.currentPage()) {
