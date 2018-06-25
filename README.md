@@ -205,6 +205,7 @@ You can also checkout [this example application in React](https://github.com/mgs
 * `sort`: set the sorting for retrieved documents (defaults to **{_id: -1}**)
 * `reactive`: set the subscription reactivity, allowing to only retrieve the initial results when set to false (defaults to **true**)
 * `debug`: console logs the query and options used when performing the find (defaults to **false**)
+* `connection`: the server connection that will manage this collection. Pass the return value of calling DDP.connect to specify a different server. (defaults to **Meteor.connection**)
 
 
 # Client Pagination available methods

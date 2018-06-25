@@ -3,10 +3,34 @@ import { Meteor } from 'meteor/meteor';
 import { ReactiveDict } from 'meteor/reactive-dict';
 import { Tracker } from 'meteor/tracker';
 
-const Counts = new Meteor.Collection('pagination-counts');
+const Counts = {};
 
-function getSubscriptionCount(id) {
-  const doc = Counts.findOne(id);
+function getConnectionId(connection) {
+  if (typeof connection._stream === 'object') {
+    if (
+        typeof connection._stream.socket === 'object' &&
+        typeof connection._stream.socket._base_url === 'string' &&
+        connection._stream.socket._base_url.length > 0
+    ) {
+      return connection._stream.socket._base_url;
+    }
+
+    if (typeof connection._stream.rawUrl === 'string' && connection._stream.rawUrl.length > 0) {
+      return connection._stream.rawUrl;
+    }
+  }
+  
+  return 'unknown';
+}
+
+function getSubscriptionCount(id, connection) {
+  const connectionId = getConnectionId(connection);
+  
+  if (!Counts.hasOwnProperty(connectionId)) {
+      Counts[connectionId] = new Meteor.Collection('pagination-counts', { connection })
+  }
+  
+  const doc = Counts[connectionId].findOne(id);
 
   return (doc && doc.count) || 0;
 }
@@ -18,6 +42,7 @@ class PaginationFactory {
       throw new Meteor.Error(4000, 'The Meteor.Pagination instance has to be initiated with `new`');
     }
 
+    this.connection = settingsIn && settingsIn.connection ? settingsIn.connection : Meteor.connection;
     this.collection = collection;
     this.settings = new ReactiveDict();
     const settings = _.extend(
@@ -92,7 +117,7 @@ class PaginationFactory {
 
       this.settings.set('ready', false);
 
-      this.subscription = Meteor.subscribe(
+      this.subscription = this.connection.subscribe(
         this.settings.get('name'),
         this.filters(),
         options,
@@ -247,7 +272,7 @@ class PaginationFactory {
     }
 
     if (this.ready()) {
-      const totalItems = getSubscriptionCount(`sub_${this.subscription.subscriptionId}`);
+      const totalItems = getSubscriptionCount(`sub_${this.subscription.subscriptionId}`, this.connection);
       this.settings.set('totalItems', totalItems);
 
       if (this.currentPage() > 1 && totalItems <= this.perPage() * this.currentPage()) {
